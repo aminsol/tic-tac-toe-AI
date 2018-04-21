@@ -321,8 +321,11 @@ class AiPlayer(TTTClient):
                     self.agent_move = position - 1
 
                     # If the user input is valid, break the loop
-                    if not self.shortMemory.save(board_before=self.board_content, move=position, role=self.role,
-                                                 is_new=True):
+                    if not self.shortMemory.save(board_before=self.board_content,
+                                                 move=position,
+                                                 role=self.role,
+                                                 is_new=True
+                                                 ):
                         print("Database Error")
                     break
             else:
