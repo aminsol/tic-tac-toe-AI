@@ -215,12 +215,13 @@ class LongMemory:
         try:
             query.execute(statement)
             result = []
-            for (id, board_before, move, board_after, role, explored) in query:
+            for (id, board_before, move, board_after, score, role, explored) in query:
                 result.append({
                     "id": id,
                     "board_before": board_before.replace('-', ' '),
                     "move": move,
                     "board_after": board_after.replace('-', ' '),
+                    "score": score,
                     "role": role,
                     "explored": explored
                 })
