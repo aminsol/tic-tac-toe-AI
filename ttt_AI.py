@@ -321,7 +321,8 @@ class AiPlayer(TTTClient):
                     self.agent_move = position - 1
 
                     # If the user input is valid, break the loop
-                    if not self.shortMemory.save(board_before=self.board_content, move=position, role=self.role, is_new=True):
+                    if not self.shortMemory.save(board_before=self.board_content, move=position, role=self.role,
+                                                 is_new=True):
                         print("Database Error")
                     break
             else:
@@ -334,23 +335,27 @@ class AiPlayer(TTTClient):
 
     def opponent_pos(self):
         opponent = []
-        agentSymbol = self.agent_role()
-        if agentSymbol == 'X':
-            oppSymbol = 'O'
+        count = 0
+        agentsymbol = self.agent_role()
+        if agentsymbol == 'X':
+            oppsymbol = 'O'
         else:
-            oppSymbol = 'X'
+            oppsymbol = 'X'
         for i in self.board_content:
-            if i == oppSymbol:
-                opponent.append(i)
+            if i == oppsymbol:
+                opponent.append(count)
+            count += 1
 
         return opponent
 
     def agent_pos(self):
         agent = []
+        count = 0
         agentsymbol = self.agent_role()
         for i in self.board_content:
             if i == agentsymbol:
-                agent.append(i)
+                agent.append(count)
+            count += 1
 
         return agent
 
