@@ -4,6 +4,8 @@
 import socket
 # Import command line arguments
 from sys import argv
+import random
+import bisect
 from database.memory import ShortMemory
 from database.memory import LongMemory
 
@@ -362,14 +364,17 @@ class AiPlayer(TTTClient):
 
         return agent
 
-    def is_game_over(self):
-        return False
-
     def is_draw(self):
-        return False
+        if self.command == "D":
+            return True
+        else:
+            return False
 
     def is_won(self):
-        return False
+        if self.command == "W":
+            return True
+        else:
+            return False
 
     def agent_role(self):
         if self.role == 'X':
@@ -389,11 +394,74 @@ class AiPlayer(TTTClient):
     def agent_last_move(self):
         return self.agent_last_move
 
-    def all_avaiable_pos(self):
-        return False
+    def all_available_pos(self):
+        result = []
+        for i in range(0, len(self.board_content)):
+            index = self.board_content.find(' ', i)
+            if index > -1:
+                result.append(index)
+                i = index
+            else:
+                break
+        return result
 
-    def position_score(position):
-        return 100
+    def positions_score(self):
+        result = []
+        old_moves = self.longMemory.read_select(self.board_content)
+        available_pos = self.all_available_pos()
+        for position in available_pos:
+            for old_move in old_moves:
+                if old_move["move"] == position:
+                    break
+            else:
+                result.append({
+                    "board_before": self.board_content,
+                    "move": position,
+                    "score": 50,
+                    "role": self.agent_role(),
+                    "new": True
+                })
+        for old_move in old_moves:
+            old_move["new"] = False
+            result.append(old_move)
+
+        return result
+
+    def decide_move(self):
+        available_moves = self.positions_score()
+        used_moves = []
+        new_moves = []
+        for move in available_moves:
+            if not move["new"]:
+                used_moves.append(move)
+            else:
+                new_moves.append(move)
+        if not new_moves:
+            best_score = -1
+            for move in used_moves:
+                if move["score"] > best_score:
+                    final_move = move
+                    best_score = move["score"]
+        else:
+            move_pool = new_moves
+            for move in used_moves:
+                if move["score"] > 50:
+                    move_pool.append(move)
+            final_move = self.weightedchoice(move_pool)
+
+        return final_move
+
+    def weightedchoice(self, weights):
+        totals = []
+        running_total = 0
+
+        for w in weights:
+            running_total += w["score"]
+            totals.append(running_total)
+
+        rnd = random.random() * totals[-1]
+        i = bisect.bisect_right(totals, rnd)
+        return weights[i]
 
 
 # Define the main program
@@ -415,6 +483,8 @@ def main():
     try:
         # Start the game
         agent.start_game()
+        agent.analyze_game()
+        agent.save_game()
     except:
         print(("Game finished unexpectedly!"))
     finally:
