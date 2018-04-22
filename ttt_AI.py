@@ -6,6 +6,7 @@ import socket
 from sys import argv
 import random
 import bisect
+import time
 from database.memory import ShortMemory
 from database.memory import LongMemory
 
@@ -25,7 +26,7 @@ class TTTClient:
             try:
                 print("Connecting to the game server...")
                 # Connection time out 10 seconds
-                self.client_socket.settimeout(10)
+                self.client_socket.settimeout(30)
                 # Connect to the specified host and port
                 self.client_socket.connect((address, int(port_number)))
                 # Return True if connected successfully
@@ -57,6 +58,7 @@ class TTTClient:
             self.client_socket.send((command_type + msg).encode())
         except:
             # If any error occurred, the connection might be lost
+            print("&&&&&")
             self.__connection_lost()
 
     def s_recv(self, size, expected_type):
@@ -102,6 +104,7 @@ class TTTClient:
             return msg
         except:
             # If any error occurred, the connection might be lost
+            print("########")
             self.__connection_lost()
         return None
 
@@ -301,7 +304,8 @@ class AiPlayer(TTTClient):
         while True:
             # Prompt the user to enter a position
             try:
-                position = int(input('Please enter the position (1~9):'))
+                move_obj = self.decide_move()
+                position = move_obj["position"] + 1
                 print(self.opponent_pos())
             except:
                 print("Invalid input.")
@@ -323,17 +327,16 @@ class AiPlayer(TTTClient):
                     self.agent_move = position - 1
 
                     # If the user input is valid, break the loop
-                    if not self.shortMemory.save(board_before=self.board_content,
-                                                 move=position,
-                                                 role=self.role,
-                                                 is_new=True
-                                                 ):
+                    if not self.shortMemory.save(move_obj):
                         print("Database Error")
                     break
             else:
                 print("Please enter a value between 1 and 9 that" +
                       "corresponds to the position on the grid board.")
         # Loop until the user enters a valid value
+
+        # wait 1 sec so other player can catch up
+        time.sleep(0.5)
 
         # Send the position back to the server
         self.s_send("i", str(position))
@@ -416,7 +419,7 @@ class AiPlayer(TTTClient):
             else:
                 result.append({
                     "board_before": self.board_content,
-                    "move": position,
+                    "position": position,
                     "score": 50,
                     "role": self.agent_role(),
                     "new": True
@@ -450,6 +453,9 @@ class AiPlayer(TTTClient):
             final_move = self.weightedchoice(move_pool)
 
         return final_move
+
+    def analyze_game(self):
+        new_moves = self.shortMemory.new_moves()
 
     def weightedchoice(self, weights):
         totals = []
