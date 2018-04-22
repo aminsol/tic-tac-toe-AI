@@ -524,11 +524,8 @@ class AiPlayer(TTTClient):
                     move["score"] = total_score / len(possible_moves)
                     self.longMemory.save(move)
                 else:
-                    if not all_moves[i - 1]["new"]:
-                        score = total_score / len(possible_moves)
-                        move["score"] = (move["score"] + score) / 2
-                    else:
-                        move["score"] = total_score / len(possible_moves)
+                    score = total_score / len(possible_moves)
+                    move["score"] = (move["score"] + score) / 2
                     self.longMemory.update(move)
             i += 1
 
