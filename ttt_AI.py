@@ -540,9 +540,11 @@ class AiPlayer(TTTClient):
         elif self.is_lost():
             game_result = "lost"
 
-        role = self.agent_role()
-        moves = self.shortMemory.read_all(role)
-        game.save(moves, game_result, role)
+        if not game_result == "Error":
+            role = self.agent_role()
+            moves = self.shortMemory.read_all(role)
+            game.save(moves, game_result, role)
+
         game.erase_memory()
 
 
@@ -561,16 +563,17 @@ def main():
     # Initialize the agent object
     agent = AiPlayer()
     # Connect to the server
+
     agent.connect(address, port_number)
     try:
         # Start the game
         agent.start_game()
         agent.analyze_game()
-        agent.clean_up()
     except:
         print(("Game finished unexpectedly!"))
     finally:
         # Close the agent
+        agent.clean_up()
         agent.close()
 
 
