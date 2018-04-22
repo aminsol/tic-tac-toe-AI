@@ -15,9 +15,8 @@ class ShortMemory:
         query = self.conn.cursor()
         position = int(move_obj["position"])
         board_before = move_obj["board_before"].replace(' ', '-')
-        board_after = list(board_before)
-        board_after[position] = move_obj["role"][0]
-        board_after = "".join(board_after)
+        board_after = move_obj["board_after"].replace(' ', '-')
+
         statement = "INSERT INTO `shortterm` (`board_before`, `position`, `board_after`, `role`, `new`, `score`) " \
                     "VALUES ('%s', %d, '%s', '%s', %d, %d)" \
                     % (
@@ -31,7 +30,7 @@ class ShortMemory:
         try:
             query.execute(statement)
             self.conn.commit()
-            return True
+            return query.lastrowid
         except self.conn.Error as e:
             print("Error code:", e.args[0])  # error number
             print("Error message:", e.args[1])  # error message
@@ -43,10 +42,47 @@ class ShortMemory:
             print("Short memory Unknown Error!")
             return False
 
-    # read_all Read the entire short memory
-    def read_all(self):
+    def update(self, record):
         query = self.conn.cursor()
-        statement = "select id, board_before, position, board_after, role, new, score from shortterm order by id DESC"
+
+        record["id"] = int(record["id"])
+        record["position"] = int(record["position"])
+        record["score"] = int(record["score"])
+        record["board_before"] = record["board_before"].replace(' ', '-')
+        record["board_after"] = record["board_after"].replace(' ', '-')
+        print("ok")
+        statement = "update `shortterm` SET " \
+                    "`board_before` = '%s', `position` = %d, `board_after` = '%s', " \
+                    "`score` = %d, `role` = '%s'" \
+                    "where id = %d" \
+                    % (
+                        record["board_before"],
+                        record["position"],
+                        record["board_after"],
+                        record["score"],
+                        record["role"],
+                        record["id"],
+                    )
+
+        try:
+            query.execute(statement)
+            self.conn.commit()
+            return True
+        except self.conn.Error as e:
+            print("Error code:", e.args[0])  # error number
+            print("Error message:", e.args[1])  # error message
+            print("Class:", "ShortMemory")  # class name
+            print("Function:", "update")  # function name
+            return False
+        except:
+            print("Short memory Unknown Error!")
+            return False
+
+    # read_all Read the entire short memory
+    def read_all(self, role):
+        query = self.conn.cursor()
+        statement = "select id, board_before, position, board_after, role, new, score from shortterm " \
+                    "where role = '%s' order by id DESC" % role
         try:
             query.execute(statement)
             result = []
@@ -58,6 +94,7 @@ class ShortMemory:
                     "board_after": board_after,
                     "role": role,
                     "new": new,
+                    "explored": False,
                     "score": score
                 })
             return result
@@ -105,9 +142,10 @@ class ShortMemory:
             print("Short memory Unknown Error!")
             return False
 
-    def new_moves(self):
+    def new_moves(self, role):
         query = self.conn.cursor()
-        statement = "select id, board_before, position, board_after, role, new from shortterm where  new = TRUE "
+        statement = "select id, board_before, position, board_after, role, new from shortterm " \
+                    "where role = %s and new = TRUE " % role
         try:
             query.execute(statement)
             result = []
@@ -132,22 +170,6 @@ class ShortMemory:
             return False
 
     # Erases shortterm table
-    def erase(self):
-        query = self.conn.cursor()
-        statement = "DELETE FROM `shortterm`"
-        try:
-            query.execute(statement)
-            self.conn.commit()
-            return True
-        except self.conn.Error as e:
-            print("Error code:", e.args[0])  # error number
-            print("Error message:", e.args[1])  # error message
-            print("Class:", "ShortMemory")  # class name
-            print("Function:", "erase")  # function name
-            return False
-        except:
-            print("Short memory Unknown Error!")
-            return False
 
 
 # The main difference between short and long term is that short term memory must be erased after each game.
@@ -190,9 +212,10 @@ class LongMemory:
             print("Long memory Unknown Error!")
             return False
 
-    def read_all(self):
+    def read_all(self, role):
         query = self.conn.cursor()
-        statement = "select id, board_before, position, board_after, score, role, explored from longterm order by id DESC"
+        statement = "select id, board_before, position, board_after, score, role, explored from longterm " \
+                    "where role = '%s' order by id DESC" % role
         try:
             query.execute(statement)
             result = []
@@ -230,7 +253,6 @@ class LongMemory:
             statement = statement + "where board_before = '%s' order by id DESC" \
                         % (board)
         try:
-            print(statement)
             query.execute(statement)
             result = []
             for (id, board_before, position, board_after, score, role, explored) in query:
@@ -288,4 +310,67 @@ class LongMemory:
             return False
         except:
             print("Long memory Unknown Error!")
+            return False
+
+
+class History:
+    def __init__(self):
+        self.conn = MySQLdb.connect(host="127.0.0.1", user="root", passwd="", db="tictactoe")
+
+    def save(self, moves, result, role):
+        query = self.conn.cursor()
+        statement = "INSERT INTO `games_history` (`result`, `role`) value " \
+                    "(%s, %s)" % (
+                        result,
+                        role
+                    )
+        query.execute(statement)
+        self.conn.commit()
+        game_id = query.lastrowid
+
+        for record in moves:
+            record["position"] = int(record["position"])
+            record["score"] = int(record["score"])
+            record["explored"] = int(record["explored"])
+            record["board_before"] = record["board_before"].replace(' ', '-')
+            record["board_after"] = record["board_after"].replace(' ', '-')
+            statement = "INSERT INTO `moves_history` (`game_id`, `board_before`, `position`, `board_after`, `score`, `role`) " \
+                        "VALUES ( %d, '%s', %d, '%s', %d, '%s')" % (
+                            game_id,
+                            record["board_before"],
+                            record["position"],
+                            record["board_after"],
+                            record["score"],
+                            record["role"]
+                        )
+            try:
+                query.execute(statement)
+            except self.conn.Error as e:
+                print("Error code:", e.args[0])  # error number
+                print("Error message:", e.args[1])  # error message
+                print("Class:", "LongMemory")  # class name
+                print("Function:", "update")  # function name
+                return False
+            except:
+                print("Long memory Unknown Error!")
+                return False
+
+        self.conn.commit()
+        return True
+
+    def erase_memory(self):
+        query = self.conn.cursor()
+        statement = "DELETE FROM `shortterm`"
+        try:
+            query.execute(statement)
+            self.conn.commit()
+            return True
+        except self.conn.Error as e:
+            print("Error code:", e.args[0])  # error number
+            print("Error message:", e.args[1])  # error message
+            print("Class:", "ShortMemory")  # class name
+            print("Function:", "erase")  # function name
+            return False
+        except:
+            print("Short memory Unknown Error!")
             return False
