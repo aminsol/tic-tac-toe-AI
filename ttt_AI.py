@@ -105,7 +105,6 @@ class TTTClient:
             return msg
         except:
             # If any error occurred, the connection might be lost
-            print("########")
             self.__connection_lost()
         return None
 
@@ -520,13 +519,16 @@ class AiPlayer(TTTClient):
                     if "explored" in pm and not pm["explored"]:
                         move["explored"] = False
 
-                if move["new"] or all_moves[i - 1]["new"]:
+                if move["new"]:
                     move["explored"] = False
                     move["score"] = total_score / len(possible_moves)
                     self.longMemory.save(move)
                 else:
-                    score = total_score / len(possible_moves)
-                    move["score"] = (move["score"] + score) / 2
+                    if not all_moves[i - 1]["new"]:
+                        score = total_score / len(possible_moves)
+                        move["score"] = (move["score"] + score) / 2
+                    else:
+                        move["score"] = total_score / len(possible_moves)
                     self.longMemory.update(move)
             i += 1
 
