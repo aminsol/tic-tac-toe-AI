@@ -17,9 +17,13 @@ class ShortMemory:
         board_before = move_obj["board_before"].replace(' ', '-')
         board_after = move_obj["board_after"].replace(' ', '-')
 
-        statement = "INSERT INTO `shortterm` (`board_before`, `position`, `board_after`, `role`, `new`, `score`) " \
-                    "VALUES ('%s', %d, '%s', '%s', %d, %d)" \
+        if move_obj["new"]:
+            move_obj["longterm_id"] = 0
+
+        statement = "INSERT INTO `shortterm` (`longterm_id`, `board_before`, `position`, `board_after`, `role`, `new`, `score`) " \
+                    "VALUES (%d, '%s', %d, '%s', '%s', %d, %d)" \
                     % (
+                        move_obj["longterm_id"],
                         board_before,
                         position,
                         board_after,
@@ -186,11 +190,10 @@ class LongMemory:
         record["explored"] = int(record["explored"])
         record["board_before"] = record["board_before"].replace(' ', '-')
         record["board_after"] = record["board_after"].replace(' ', '-')
-        statement = "INSERT INTO `longterm` (`board_before`, `position`, `board_after`, `score`, `role`, `explored`) " \
-                    "VALUES ('%s', %d, '%s', %d, '%s', %d)" % (
+        statement = "INSERT INTO `longterm` (`board_before`, `position`, `score`, `role`, `explored`) " \
+                    "VALUES ('%s', %d, %d, '%s', %d)" % (
                         record["board_before"],
                         record["position"],
-                        record["board_after"],
                         record["score"],
                         record["role"],
                         record["explored"]
@@ -214,17 +217,16 @@ class LongMemory:
 
     def read_all(self, role):
         query = self.conn.cursor()
-        statement = "select id, board_before, position, board_after, score, role, explored from longterm " \
+        statement = "select id, board_before, position, score, role, explored from longterm " \
                     "where role = '%s' order by id DESC" % role
         try:
             query.execute(statement)
             result = []
-            for (id, board_before, position, board_after, score, role, explored) in query:
+            for (id, board_before, position, score, role, explored) in query:
                 result.append({
                     "id": id,
                     "board_before": board_before,
                     "position": position,
-                    "board_after": board_after,
                     "score": score,
                     "role": role,
                     "explored": explored
@@ -245,7 +247,7 @@ class LongMemory:
     def read_select(self, board, position=-1):
         query = self.conn.cursor()
         board = board.replace(' ', '-')
-        statement = "select id, board_before, position, board_after, score, role, explored from longterm "
+        statement = "select id, board_before, position, score, role, explored from longterm "
         if position > -1:
             statement = statement + "where board_before = '%s' and position = %d order by id DESC" \
                         % (board, position)
@@ -255,12 +257,11 @@ class LongMemory:
         try:
             query.execute(statement)
             result = []
-            for (id, board_before, position, board_after, score, role, explored) in query:
+            for (id, board_before, position, score, role, explored) in query:
                 result.append({
                     "id": id,
                     "board_before": board_before.replace('-', ' '),
                     "position": position,
-                    "board_after": board_after.replace('-', ' '),
                     "score": score,
                     "role": role,
                     "explored": explored
@@ -285,17 +286,16 @@ class LongMemory:
         record["board_before"] = record["board_before"].replace(' ', '-')
         record["board_after"] = record["board_after"].replace(' ', '-')
         statement = "update `longterm` SET " \
-                    "`board_before` = '%s', `position` = %d, `board_after` = '%s', " \
+                    "`board_before` = '%s', `position` = %d, " \
                     "`score` = %d, `role` = '%s', `explored` = %d " \
                     "where id = %d" \
                     % (
                         record["board_before"],
                         record["position"],
-                        record["board_after"],
                         record["score"],
                         record["role"],
                         record["explored"],
-                        record["id"],
+                        record["longterm_id"],
                     )
 
         try:
