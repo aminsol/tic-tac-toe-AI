@@ -1,5 +1,4 @@
 #! /usr/bin/python3
-
 # Import the socket module
 import socket
 # Import command line arguments
@@ -340,7 +339,7 @@ class AiPlayer(TTTClient):
                     # Update the current move
                     self.agent_move = move_obj
 
-                    self.agent_move["id"] = self.shortMemory.save(move_obj)
+                    self.agent_move["shortterm_id"] = self.shortMemory.save(move_obj)
 
                     # If the user input is valid, break the loop
                     break
@@ -551,7 +550,6 @@ class AiPlayer(TTTClient):
             game.erase_memory()
 
 
-
 # Define the main program
 def main():
     # If there are more than 3 arguments
@@ -564,7 +562,7 @@ def main():
         address = input("Please enter the address:")
         port_number = input("Please enter the port:")
 
-    for game in range (0, 20):
+    for game in range(0, 20):
         print("=============START===============")
         print("Start of Game number:", game)
         # Initialize the agent object
@@ -572,6 +570,7 @@ def main():
         # Connect to the server
         agent.connect(address, port_number)
         try:
+            agent.clean_up()
             # Start the game
             agent.start_game()
             agent.analyze_game()

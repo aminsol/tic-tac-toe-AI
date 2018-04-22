@@ -569,6 +569,7 @@ def main():
 
     agent.connect(address, port_number)
     try:
+        agent.clean_up()
         # Start the game
         agent.start_game()
         agent.analyze_game()
