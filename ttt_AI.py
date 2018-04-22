@@ -214,7 +214,7 @@ class AiPlayer(TTTClient):
                 print("It's a draw.")
                 break
             elif (self.command == "W"):
-                self.game_result = "L"
+                self.game_result = "W"
                 # If this player wins
                 print("You WIN!")
                 # Draw winning path
