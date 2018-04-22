@@ -440,7 +440,7 @@ class AiPlayer(TTTClient):
         available_pos = self.all_available_pos(board)
         for position in available_pos:
             for old_move in old_moves:
-                if old_move["move"] == position:
+                if old_move["position"] == position:
                     break
             else:
                 result.append({
@@ -448,7 +448,8 @@ class AiPlayer(TTTClient):
                     "position": position,
                     "score": 50,
                     "role": self.agent_role(),
-                    "new": True
+                    "new": True,
+                    "explored": False
                 })
         for old_move in old_moves:
             old_move["new"] = False
@@ -494,7 +495,7 @@ class AiPlayer(TTTClient):
 
     def analyze_game(self):
         all_moves = self.shortMemory.read_all(self.agent_role())
-
+        i = 0
         for move in all_moves:
             if move == all_moves[0]:
                 move["explored"] = True
@@ -516,10 +517,10 @@ class AiPlayer(TTTClient):
                 move["explored"] = True
                 for pm in possible_moves:
                     total_score += pm["score"]
-                    if not pm["explored"]:
+                    if "explored" in pm and not pm["explored"]:
                         move["explored"] = False
 
-                if move["new"]:
+                if move["new"] or all_moves[i - 1]["new"]:
                     move["explored"] = False
                     move["score"] = total_score / len(possible_moves)
                     self.longMemory.save(move)
@@ -527,6 +528,7 @@ class AiPlayer(TTTClient):
                     score = total_score / len(possible_moves)
                     move["score"] = (move["score"] + score) / 2
                     self.longMemory.update(move)
+            i += 1
 
     def clean_up(self):
         game = History()
@@ -538,11 +540,9 @@ class AiPlayer(TTTClient):
         elif self.is_lost():
             game_result = "lost"
 
-        game.save(
-            self.shortMemory.read_all(),
-            game_result,
-            self.agent_role()
-        )
+        role = self.agent_role()
+        moves = self.shortMemory.read_all(role)
+        game.save(moves, game_result, role)
         game.erase_memory()
 
 

@@ -89,9 +89,9 @@ class ShortMemory:
             for (id, board_before, position, board_after, role, new, score) in query:
                 result.append({
                     "id": id,
-                    "board_before": board_before,
+                    "board_before": board_before.replace('-', ' '),
                     "position": position,
-                    "board_after": board_after,
+                    "board_after": board_after.replace('-', ' '),
                     "role": role,
                     "new": new,
                     "explored": False,
@@ -320,7 +320,7 @@ class History:
     def save(self, moves, result, role):
         query = self.conn.cursor()
         statement = "INSERT INTO `games_history` (`result`, `role`) value " \
-                    "(%s, %s)" % (
+                    "('%s', '%s')" % (
                         result,
                         role
                     )
@@ -334,12 +334,13 @@ class History:
             record["explored"] = int(record["explored"])
             record["board_before"] = record["board_before"].replace(' ', '-')
             record["board_after"] = record["board_after"].replace(' ', '-')
-            statement = "INSERT INTO `moves_history` (`game_id`, `board_before`, `position`, `board_after`, `score`, `role`) " \
-                        "VALUES ( %d, '%s', %d, '%s', %d, '%s')" % (
+            statement = "INSERT INTO `moves_history` (`game_id`, `board_before`, `position`, `board_after`, `new`, `score`, `role`) " \
+                        "VALUES ( %d, '%s', %d, '%s', '%s', %d, '%s')" % (
                             game_id,
                             record["board_before"],
                             record["position"],
                             record["board_after"],
+                            record["new"],
                             record["score"],
                             record["role"]
                         )
