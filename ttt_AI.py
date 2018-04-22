@@ -340,7 +340,7 @@ class AiPlayer(TTTClient):
                     # Update the current move
                     self.agent_move = move_obj
 
-                    self.agent_move["id"] = self.shortMemory.save(move_obj)
+                    self.agent_move["shortterm_id"] = self.shortMemory.save(move_obj)
 
                     # If the user input is valid, break the loop
                     break

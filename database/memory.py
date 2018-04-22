@@ -49,7 +49,7 @@ class ShortMemory:
     def update(self, record):
         query = self.conn.cursor()
 
-        record["id"] = int(record["id"])
+        record["shortterm_id"] = int(record["shortterm_id"])
         record["position"] = int(record["position"])
         record["score"] = int(record["score"])
         record["board_before"] = record["board_before"].replace(' ', '-')
@@ -65,7 +65,7 @@ class ShortMemory:
                         record["board_after"],
                         record["score"],
                         record["role"],
-                        record["id"],
+                        record["shortterm_id"],
                     )
 
         try:
@@ -92,7 +92,7 @@ class ShortMemory:
             result = []
             for (id, board_before, position, board_after, role, new, score) in query:
                 result.append({
-                    "id": id,
+                    "shortterm_id": id,
                     "board_before": board_before.replace('-', ' '),
                     "position": position,
                     "board_after": board_after.replace('-', ' '),
@@ -128,7 +128,7 @@ class ShortMemory:
             result = []
             for (id, board_before, position, board_after, role, new) in query:
                 result.append({
-                    "id": id,
+                    "shortterm_id": id,
                     "board_before": board_before.replace('-', ' '),
                     "position": position,
                     "board_after": board_after.replace('-', ' '),
@@ -224,7 +224,7 @@ class LongMemory:
             result = []
             for (id, board_before, position, score, role, explored) in query:
                 result.append({
-                    "id": id,
+                    "longterm_id": id,
                     "board_before": board_before,
                     "position": position,
                     "score": score,
@@ -259,7 +259,7 @@ class LongMemory:
             result = []
             for (id, board_before, position, score, role, explored) in query:
                 result.append({
-                    "id": id,
+                    "longterm_id": id,
                     "board_before": board_before.replace('-', ' '),
                     "position": position,
                     "score": score,
@@ -279,7 +279,7 @@ class LongMemory:
 
     def update(self, record):
         query = self.conn.cursor()
-        record["id"] = int(record["id"])
+        record["longterm_id"] = int(record["longterm_id"])
         record["position"] = int(record["position"])
         record["score"] = int(record["score"])
         record["explored"] = int(record["explored"])
