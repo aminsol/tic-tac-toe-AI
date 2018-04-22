@@ -50,7 +50,7 @@ class ShortMemory:
         record["score"] = int(record["score"])
         record["board_before"] = record["board_before"].replace(' ', '-')
         record["board_after"] = record["board_after"].replace(' ', '-')
-        print("ok")
+
         statement = "update `shortterm` SET " \
                     "`board_before` = '%s', `position` = %d, `board_after` = '%s', " \
                     "`score` = %d, `role` = '%s'" \
