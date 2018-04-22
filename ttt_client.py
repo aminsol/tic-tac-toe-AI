@@ -21,7 +21,7 @@ class TTTClient:
             try:
                 print("Connecting to the game server...");
                 # Connection time out 10 seconds
-                self.client_socket.settimeout(10);
+                self.client_socket.settimeout(30);
                 # Connect to the specified host and port
                 self.client_socket.connect((address, int(port_number)));
                 # Return True if connected successfully
