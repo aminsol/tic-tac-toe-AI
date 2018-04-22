@@ -546,8 +546,9 @@ class AiPlayer(TTTClient):
             role = self.agent_role()
             moves = self.shortMemory.read_all(role)
             game.save(moves, game_result, role)
-
-        game.erase_memory()
+            game.erase_memory(role)
+        else:
+            game.erase_memory()
 
 
 # Define the main program

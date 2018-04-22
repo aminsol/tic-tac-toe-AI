@@ -359,9 +359,14 @@ class History:
         self.conn.commit()
         return True
 
-    def erase_memory(self):
+    def erase_memory(self, role=False):
         query = self.conn.cursor()
-        statement = "DELETE FROM `shortterm`"
+        if not role:
+            role = "%"
+        elif not role == "X" and not role == "O":
+            return False
+
+        statement = "DELETE FROM `shortterm` where role = '%s'" % role
         try:
             query.execute(statement)
             self.conn.commit()

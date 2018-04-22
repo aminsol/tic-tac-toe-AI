@@ -546,8 +546,10 @@ class AiPlayer(TTTClient):
             role = self.agent_role()
             moves = self.shortMemory.read_all(role)
             game.save(moves, game_result, role)
+            game.erase_memory(role)
+        else:
+            game.erase_memory()
 
-        game.erase_memory()
 
 
 # Define the main program
@@ -562,7 +564,7 @@ def main():
         address = input("Please enter the address:")
         port_number = input("Please enter the port:")
 
-    for game in range (0, 10):
+    for game in range (0, 20):
         print("=============START===============")
         print("Start of Game number:", game)
         # Initialize the agent object
