@@ -24,7 +24,7 @@ class ShortMemory:
                 return move_obj["shortterm_id"]
 
         statement = "INSERT INTO `shortterm` (`longterm_id`, `board_before`, `position`, `board_after`, `role`, `new`, `score`) " \
-                    "VALUES (%d, '%s', %d, '%s', '%s', %d, %d)" \
+                    "VALUES (%d, '%s', %d, '%s', '%s', %d, %f)" \
                     % (
                         move_obj["longterm_id"],
                         board_before,
@@ -54,13 +54,13 @@ class ShortMemory:
 
         record["shortterm_id"] = int(record["shortterm_id"])
         record["position"] = int(record["position"])
-        record["score"] = int(record["score"])
+        record["score"] = float(record["score"])
         record["board_before"] = record["board_before"].replace(' ', '-')
         record["board_after"] = record["board_after"].replace(' ', '-')
 
         statement = "update `shortterm` SET " \
                     "`board_before` = '%s', `position` = %d, `board_after` = '%s', " \
-                    "`score` = %d, `role` = '%s'" \
+                    "`score` = %f, `role` = '%s'" \
                     "where id = %d" \
                     % (
                         record["board_before"],
@@ -190,12 +190,12 @@ class LongMemory:
     def save(self, record):
         query = self.conn.cursor()
         record["position"] = int(record["position"])
-        record["score"] = int(record["score"])
+        record["score"] = float(record["score"])
         record["explored"] = int(record["explored"])
         record["board_before"] = record["board_before"].replace(' ', '-')
         record["board_after"] = record["board_after"].replace(' ', '-')
         statement = "INSERT INTO `longterm` (`board_before`, `position`, `score`, `role`, `explored`) " \
-                    "VALUES ('%s', %d, %d, '%s', %d)" % (
+                    "VALUES ('%s', %d, %f, '%s', %d)" % (
                         record["board_before"],
                         record["position"],
                         record["score"],
@@ -288,13 +288,13 @@ class LongMemory:
             raise Exception
         record["longterm_id"] = int(record["longterm_id"])
         record["position"] = int(record["position"])
-        record["score"] = int(record["score"])
+        record["score"] = float(record["score"])
         record["explored"] = int(record["explored"])
         record["board_before"] = record["board_before"].replace(' ', '-')
         record["board_after"] = record["board_after"].replace(' ', '-')
         statement = "update `longterm` SET " \
                     "`board_before` = '%s', `position` = %d, " \
-                    "`score` = %d, `role` = '%s', `explored` = %d " \
+                    "`score` = %f, `role` = '%s', `explored` = %d " \
                     "where id = %d" \
                     % (
                         record["board_before"],
@@ -337,12 +337,12 @@ class History:
 
         for record in moves:
             record["position"] = int(record["position"])
-            record["score"] = int(record["score"])
+            record["score"] = float(record["score"])
             record["explored"] = int(record["explored"])
             record["board_before"] = record["board_before"].replace(' ', '-')
             record["board_after"] = record["board_after"].replace(' ', '-')
             statement = "INSERT INTO `moves_history` (`game_id`, `board_before`, `position`, `board_after`, `new`, `score`, `role`) " \
-                        "VALUES ( %d, '%s', %d, '%s', '%s', %d, '%s')" % (
+                        "VALUES ( %d, '%s', %d, '%s', '%s', %f, '%s')" % (
                             game_id,
                             record["board_before"],
                             record["position"],
