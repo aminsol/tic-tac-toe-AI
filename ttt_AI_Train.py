@@ -271,7 +271,6 @@ class AiPlayer(TTTClient):
             self.agent_move["board_after"] = "".join(board)
             self.shortMemory.update(self.agent_move)
 
-
     def __draw_winning_path__(self, winning_path):
         """(Private) Shows to the user the path that has caused the game to
         win or lose. This function might be overridden by the GUI program."""
@@ -350,7 +349,7 @@ class AiPlayer(TTTClient):
         # Loop until the user enters a valid value
 
         # wait 1 sec so other player can catch up
-        time.sleep(1)
+        # time.sleep(1)
 
         # Send the position back to the server
         self.s_send("i", str(position))
@@ -417,7 +416,7 @@ class AiPlayer(TTTClient):
     def agent_last_move(self):
         return self.agent_last_move
 
-    def all_available_pos(self, board = ""):
+    def all_available_pos(self, board=""):
         result = []
         if not board:
             board = self.board_content
@@ -430,7 +429,7 @@ class AiPlayer(TTTClient):
                 break
         return result
 
-    def positions_score(self, board = ""):
+    def positions_score(self, board=""):
         result = []
         if not board:
             board = self.board_content
@@ -560,7 +559,10 @@ def main():
         address = input("Please enter the address:")
         port_number = input("Please enter the port:")
 
-    for game in range(0, 5):
+    failed_game = 0
+    total_game = 0
+    for game in range(0, 10):
+        total_game += 1
         print("=============START===============")
         print("Start of Game number:", game)
         # Initialize the agent object
@@ -574,14 +576,16 @@ def main():
             agent.analyze_game()
         except:
             print(("Game finished unexpectedly!"))
+            failed_game += 1
         finally:
             # Close the agent
             agent.clean_up()
             agent.close()
-        time.sleep(1)
         print("End of Game number:", game)
         print("=============END================")
         print(" ")
+
+    print("Connection Quality:", (total_game - failed_game) / total_game * 100, "%")
 
 
 if __name__ == "__main__":
