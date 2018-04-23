@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 21, 2018 at 02:19 AM
+-- Generation Time: Apr 22, 2018 at 10:02 PM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -25,17 +25,47 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `games_history`
+--
+
+CREATE TABLE `games_history` (
+  `id` int(11) NOT NULL,
+  `role` varchar(1) NOT NULL,
+  `result` varchar(5) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `longterm`
 --
 
 CREATE TABLE `longterm` (
   `id` int(11) NOT NULL,
   `board_before` varchar(10) NOT NULL,
-  `move` int(11) NOT NULL,
+  `position` int(11) NOT NULL,
   `board_after` varchar(10) NOT NULL,
   `score` int(11) NOT NULL,
   `role` char(1) NOT NULL,
   `explored` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `moves_history`
+--
+
+CREATE TABLE `moves_history` (
+  `id` int(11) NOT NULL,
+  `game_id` int(11) NOT NULL,
+  `board_before` varchar(10) NOT NULL,
+  `position` int(11) NOT NULL,
+  `board_after` varchar(10) NOT NULL,
+  `role` char(1) NOT NULL,
+  `new` int(11) NOT NULL,
+  `score` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -47,10 +77,11 @@ CREATE TABLE `longterm` (
 CREATE TABLE `shortterm` (
   `id` int(11) NOT NULL,
   `board_before` varchar(10) NOT NULL,
-  `move` int(11) NOT NULL,
+  `position` int(11) NOT NULL,
   `board_after` varchar(10) NOT NULL,
   `role` char(1) NOT NULL,
-  `new` int(11) NOT NULL
+  `new` int(11) NOT NULL,
+  `score` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -58,22 +89,40 @@ CREATE TABLE `shortterm` (
 --
 
 --
+-- Indexes for table `games_history`
+--
+ALTER TABLE `games_history`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `longterm`
 --
 ALTER TABLE `longterm`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `board_move` (`board_before`,`move`) USING BTREE;
+  ADD UNIQUE KEY `board_move` (`board_before`,`position`) USING BTREE;
+
+--
+-- Indexes for table `moves_history`
+--
+ALTER TABLE `moves_history`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `shortterm`
 --
 ALTER TABLE `shortterm`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `board_move` (`board_before`,`move`);
+  ADD UNIQUE KEY `board_move` (`board_before`,`position`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `games_history`
+--
+ALTER TABLE `games_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `longterm`
@@ -82,10 +131,16 @@ ALTER TABLE `longterm`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `moves_history`
+--
+ALTER TABLE `moves_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `shortterm`
 --
 ALTER TABLE `shortterm`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

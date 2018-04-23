@@ -420,16 +420,14 @@ class AiPlayer(TTTClient):
         result = []
         if not board:
             board = self.board_content
-        tmp = 0
         for i in range(0, len(board)):
-            index = board.find(' ', tmp)
+            index = board.find(' ', i)
             if index > -1:
                 result.append(index)
-                tmp = index + 1
+                i = index
             else:
                 break
         return result
-
 
     def positions_score(self, board=""):
         result = []
@@ -525,15 +523,17 @@ class AiPlayer(TTTClient):
             else:
                 possible_moves = self.positions_score(move["board_after"])
                 total_score = 0
+                move["explored"] = True
                 for pm in possible_moves:
                     total_score += pm["score"]
+                    if "explored" not in pm or not pm["explored"]:
+                        move["explored"] = False
 
                 if move["new"]:
                     move["explored"] = False
                     move["score"] = total_score / len(possible_moves)
                     self.longMemory.save(move)
                 else:
-                    move["explored"] = self.longMemory.is_next_move_explored(move)
                     score = total_score / len(possible_moves)
                     move["score"] = (move["score"] + score) / 2
                     self.longMemory.update(move)
@@ -570,22 +570,33 @@ def main():
         address = input("Please enter the address:")
         port_number = input("Please enter the port:")
 
-    # Initialize the agent object
-    agent = AiPlayer()
-    # Connect to the server
+    failed_game = 0
+    total_game = 0
+    for game in range(0, 5000):
+        total_game += 1
+        print("=============START===============")
+        print("Start of Game number:", game)
+        # Initialize the agent object
+        agent = AiPlayer()
+        # Connect to the server
+        agent.connect(address, port_number)
+        try:
+            agent.clean_up()
+            # Start the game
+            agent.start_game()
+            agent.analyze_game()
+        except:
+            print(("Game finished unexpectedly!"))
+            failed_game += 1
+        finally:
+            # Close the agent
+            agent.clean_up()
+            agent.close()
+        print("End of Game number:", game)
+        print("=============END================")
+        print(" ")
 
-    agent.connect(address, port_number)
-    try:
-        agent.clean_up()
-        # Start the game
-        agent.start_game()
-        agent.analyze_game()
-    except:
-        print(("Game finished unexpectedly!"))
-    finally:
-        # Close the agent
-        agent.clean_up()
-        agent.close()
+    print("Connection Quality:", (total_game - failed_game) / total_game * 100, "%")
 
 
 if __name__ == "__main__":
