@@ -359,7 +359,8 @@ class LongMemory:
                     if not explored:
                         return False
                 else:
-                    if query.rowcount == len(result):
+                    number_poss = (len(result) * len(result) -1)
+                    if query.rowcount == number_poss:
                         return True
                     else:
                         return False

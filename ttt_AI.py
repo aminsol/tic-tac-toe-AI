@@ -349,7 +349,7 @@ class AiPlayer(TTTClient):
         # Loop until the user enters a valid value
 
         # wait 1 sec so other player can catch up
-        # time.sleep(1)
+        time.sleep(.8)
 
         # Send the position back to the server
         self.s_send("i", str(position))
@@ -498,7 +498,7 @@ class AiPlayer(TTTClient):
         else:
             move_pool = new_moves
             for move in used_moves:
-                if move["score"] > 50:
+                if move["score"] == 100:
                     move_pool.append(move)
             final_move = self.weighted_choice(move_pool)
 
