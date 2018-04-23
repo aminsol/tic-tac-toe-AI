@@ -457,16 +457,20 @@ class AiPlayer(TTTClient):
         return result
 
     def weighted_choice(self, weights):
-        totals = []
-        running_total = 0
+        if len(weights) > 1:
+            totals = []
+            running_total = 0
+            for w in weights:
+                running_total += w["score"]
+                totals.append(running_total)
 
-        for w in weights:
-            running_total += w["score"]
-            totals.append(running_total)
-
-        rnd = random.random() * totals[-1]
-        i = bisect.bisect_right(totals, rnd)
-        return weights[i]
+            rnd = random.random() * totals[-1]
+            i = bisect.bisect_right(totals, rnd)
+            return weights[i - 1]
+        elif len(weights) == 1:
+            return weights[0]
+        else:
+            raise Exception
 
     def decide_move(self):
         available_moves = self.positions_score()
@@ -479,10 +483,17 @@ class AiPlayer(TTTClient):
                 new_moves.append(move)
         if not new_moves:
             best_score = -1
+            move_pool = []
             for move in used_moves:
                 if move["score"] > best_score:
                     final_move = move
                     best_score = move["score"]
+                if not move["explored"] or move["score"] > 50:
+                    move_pool.append(move)
+
+            if move_pool:
+                final_move = self.weighted_choice(move_pool)
+
         else:
             move_pool = new_moves
             for move in used_moves:
