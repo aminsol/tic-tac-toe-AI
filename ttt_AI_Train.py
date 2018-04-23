@@ -420,14 +420,16 @@ class AiPlayer(TTTClient):
         result = []
         if not board:
             board = self.board_content
+        tmp = 0
         for i in range(0, len(board)):
-            index = board.find(' ', i)
+            index = board.find(' ', tmp)
             if index > -1:
                 result.append(index)
-                i = index
+                tmp = index + 1
             else:
                 break
         return result
+
 
     def positions_score(self, board=""):
         result = []
@@ -523,17 +525,15 @@ class AiPlayer(TTTClient):
             else:
                 possible_moves = self.positions_score(move["board_after"])
                 total_score = 0
-                move["explored"] = True
                 for pm in possible_moves:
                     total_score += pm["score"]
-                    if "explored" not in pm or not pm["explored"]:
-                        move["explored"] = False
 
                 if move["new"]:
                     move["explored"] = False
                     move["score"] = total_score / len(possible_moves)
                     self.longMemory.save(move)
                 else:
+                    move["explored"] = self.longMemory.is_next_move_explored(move)
                     score = total_score / len(possible_moves)
                     move["score"] = (move["score"] + score) / 2
                     self.longMemory.update(move)

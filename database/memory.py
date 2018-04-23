@@ -319,6 +319,63 @@ class LongMemory:
             print("Long memory Unknown Error!")
             return False
 
+    def is_next_move_explored(self, move):
+        query = self.conn.cursor()
+        board = move["board_before"].replace(' ', '-')
+        board = list(board)
+        board[move["position"]] = move["role"][0]
+        if move["role"][0] == "X":
+            opp_role = "O"
+        else:
+            opp_role = "X"
+
+        tmpboard = "".join(board)
+        result = []
+        tmp = 0
+        for i in range(0, len(tmpboard)):
+            index = tmpboard.find('-', tmp)
+            if index > -1:
+                result.append(index)
+                tmp = index + 1
+            else:
+                break
+        if len(result):
+            generated_boards = []
+            for position in result:
+                board[position] = opp_role
+                generated_boards.append("".join(board))
+                board[position] = '-'
+
+            statement = "select id, `explored` from longterm where "
+
+            for i in range(0, len(generated_boards) - 1):
+                statement += "board_before = '%s' or " % generated_boards[i]
+            else:
+                statement += "board_before = '%s'" % generated_boards[-1]
+
+            try:
+                query.execute(statement)
+                for (id, explored) in query:
+                    if not explored:
+                        return False
+                else:
+                    if query.rowcount == len(result):
+                        return True
+                    else:
+                        return False
+
+            except self.conn.Error as e:
+                print("Error code:", e.args[0])  # error number
+                print("Error message:", e.args[1])  # error message
+                print("Class:", "LongMemory")  # class name
+                print("Function:", "read_select")  # function name
+                return False
+            except:
+                print("Long memory Unknown Error!")
+                return False
+        else:
+            return True
+
 
 class History:
     def __init__(self):
