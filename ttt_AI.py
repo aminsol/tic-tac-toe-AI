@@ -473,6 +473,7 @@ class AiPlayer(TTTClient):
         else:
             raise Exception
 
+
     def decide_move(self):
         available_moves = self.positions_score()
         used_moves = []
@@ -489,7 +490,7 @@ class AiPlayer(TTTClient):
                 if move["score"] > best_score:
                     final_move = move
                     best_score = move["score"]
-                if not move["explored"] or move["score"] > 50:
+                if not move["explored"]:
                     move_pool.append(move)
 
             if move_pool:
@@ -507,37 +508,56 @@ class AiPlayer(TTTClient):
     def analyze_game(self):
         all_moves = self.shortMemory.read_all(self.agent_role())
         i = 0
-        for move in all_moves:
-            if move == all_moves[0]:
-                move["explored"] = True
-                if self.is_won():
-                    move["score"] = 100
-                elif self.is_draw():
-                    move["score"] = 50
-                elif self.is_lost():
-                    move["score"] = 0
-                else:
-                    break
-                if move["new"]:
-                    self.longMemory.save(move)
-                else:
-                    self.longMemory.update(move)
-            else:
-                possible_moves = self.positions_score(move["board_after"])
-                total_score = 0
-                for pm in possible_moves:
-                    total_score += pm["score"]
 
-                if move["new"]:
-                    move["explored"] = False
-                    move["score"] = total_score / len(possible_moves)
-                    self.longMemory.save(move)
+        for move in all_moves:
+            if not move["explored"]:
+                if move == all_moves[0]:
+                    move["explored"] = True
+                    if self.is_won():
+                        move["score"] = 100
+                        alternative_moves = self.positions_score(move["board_before"])
+                        for alm in alternative_moves:
+                            if alm["position"] != move["position"]:
+                                alm["score"] = 50
+                                alm["explored"] = True
+                                if alm["new"]:
+                                    self.longMemory.save(alm)
+                                else:
+                                    if self.agent_role() == "O":
+                                        STOP = True
+                                    self.longMemory.update(alm)
+                    elif self.is_draw():
+                        move["score"] = 50
+                    elif self.is_lost():
+                        move["score"] = 0
+                    else:
+                        break
+                    if move["new"]:
+                        self.longMemory.save(move)
+                    else:
+                        self.longMemory.update(move)
                 else:
-                    move["explored"] = self.longMemory.is_next_move_explored(move)
-                    score = total_score / len(possible_moves)
-                    move["score"] = (move["score"] + score) / 2
-                    self.longMemory.update(move)
-            i += 1
+                    possible_moves = self.positions_score(move["board_after"])
+                    total_score = 0
+                    for pm in possible_moves:
+                        total_score += pm["score"]
+
+                    if move["new"]:
+                        move["explored"] = False
+                        move["score"] = total_score / len(possible_moves)
+                        self.longMemory.save(move)
+                    else:
+                        if "explored" not in move or not move["explored"]:
+                            finalscore = self.longMemory.is_next_move_explored(move)
+                            if finalscore:
+                                move["explored"] = True
+                                move["score"] = finalscore
+                            else:
+                                move["explored"] = False
+                                score = total_score / len(possible_moves)
+                                move["score"] = (move["score"] + score) / 2
+                        self.longMemory.update(move)
+                i += 1
 
     def clean_up(self):
         game = History()

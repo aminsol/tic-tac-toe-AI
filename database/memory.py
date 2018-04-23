@@ -291,7 +291,6 @@ class LongMemory:
         record["score"] = float(record["score"])
         record["explored"] = int(record["explored"])
         record["board_before"] = record["board_before"].replace(' ', '-')
-        record["board_after"] = record["board_after"].replace(' ', '-')
         statement = "update `longterm` SET " \
                     "`board_before` = '%s', `position` = %d, " \
                     "`score` = %f, `role` = '%s', `explored` = %d " \
@@ -346,7 +345,7 @@ class LongMemory:
                 generated_boards.append("".join(board))
                 board[position] = '-'
 
-            statement = "select id, `explored` from longterm where "
+            statement = "select `score`, `explored` from longterm where "
 
             for i in range(0, len(generated_boards) - 1):
                 statement += "board_before = '%s' or " % generated_boards[i]
@@ -355,13 +354,16 @@ class LongMemory:
 
             try:
                 query.execute(statement)
-                for (id, explored) in query:
+                totalscore = 0
+                for (score, explored) in query:
                     if not explored:
                         return False
+                    else:
+                        totalscore += score
                 else:
-                    number_poss = (len(result) * len(result) -1)
+                    number_poss = (len(result) * (len(result) -1))
                     if query.rowcount == number_poss:
-                        return True
+                        return totalscore / number_poss
                     else:
                         return False
 
