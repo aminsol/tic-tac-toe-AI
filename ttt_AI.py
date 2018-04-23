@@ -271,7 +271,6 @@ class AiPlayer(TTTClient):
             self.agent_move["board_after"] = "".join(board)
             self.shortMemory.update(self.agent_move)
 
-
     def __draw_winning_path__(self, winning_path):
         """(Private) Shows to the user the path that has caused the game to
         win or lose. This function might be overridden by the GUI program."""
@@ -350,7 +349,7 @@ class AiPlayer(TTTClient):
         # Loop until the user enters a valid value
 
         # wait 1 sec so other player can catch up
-        time.sleep(0.8)
+        # time.sleep(1)
 
         # Send the position back to the server
         self.s_send("i", str(position))
@@ -417,20 +416,22 @@ class AiPlayer(TTTClient):
     def agent_last_move(self):
         return self.agent_last_move
 
-    def all_available_pos(self, board = ""):
+    def all_available_pos(self, board=""):
         result = []
         if not board:
             board = self.board_content
+        tmp = 0
         for i in range(0, len(board)):
-            index = board.find(' ', i)
+            index = board.find(' ', tmp)
             if index > -1:
                 result.append(index)
-                i = index
+                tmp = index + 1
             else:
                 break
         return result
 
-    def positions_score(self, board = ""):
+
+    def positions_score(self, board=""):
         result = []
         if not board:
             board = self.board_content
@@ -524,17 +525,15 @@ class AiPlayer(TTTClient):
             else:
                 possible_moves = self.positions_score(move["board_after"])
                 total_score = 0
-                move["explored"] = True
                 for pm in possible_moves:
                     total_score += pm["score"]
-                    if "explored" not in pm or not pm["explored"]:
-                        move["explored"] = False
 
                 if move["new"]:
                     move["explored"] = False
                     move["score"] = total_score / len(possible_moves)
                     self.longMemory.save(move)
                 else:
+                    move["explored"] = self.longMemory.is_next_move_explored(move)
                     score = total_score / len(possible_moves)
                     move["score"] = (move["score"] + score) / 2
                     self.longMemory.update(move)
