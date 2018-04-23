@@ -19,6 +19,9 @@ class ShortMemory:
 
         if move_obj["new"]:
             move_obj["longterm_id"] = 0
+        if "shortterm_id" in move_obj:
+            if move_obj["shortterm_id"]:
+                return move_obj["shortterm_id"]
 
         statement = "INSERT INTO `shortterm` (`longterm_id`, `board_before`, `position`, `board_after`, `role`, `new`, `score`) " \
                     "VALUES (%d, '%s', %d, '%s', '%s', %d, %d)" \
@@ -85,14 +88,15 @@ class ShortMemory:
     # read_all Read the entire short memory
     def read_all(self, role):
         query = self.conn.cursor()
-        statement = "select id, board_before, position, board_after, role, new, score from shortterm " \
+        statement = "select id, longterm_id, board_before, position, board_after, role, new, score from shortterm " \
                     "where role = '%s' order by id DESC" % role
         try:
             query.execute(statement)
             result = []
-            for (id, board_before, position, board_after, role, new, score) in query:
+            for (shortterm_id, longterm_id, board_before, position, board_after, role, new, score) in query:
                 result.append({
-                    "shortterm_id": id,
+                    "shortterm_id": shortterm_id,
+                    "longterm_id": longterm_id,
                     "board_before": board_before.replace('-', ' '),
                     "position": position,
                     "board_after": board_after.replace('-', ' '),
@@ -279,6 +283,9 @@ class LongMemory:
 
     def update(self, record):
         query = self.conn.cursor()
+        if "longterm_id" not in record:
+            print("longterm_id is missing in LongMemory update function!")
+            raise Exception
         record["longterm_id"] = int(record["longterm_id"])
         record["position"] = int(record["position"])
         record["score"] = int(record["score"])

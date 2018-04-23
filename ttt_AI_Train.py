@@ -350,7 +350,7 @@ class AiPlayer(TTTClient):
         # Loop until the user enters a valid value
 
         # wait 1 sec so other player can catch up
-        time.sleep(0.8)
+        time.sleep(1)
 
         # Send the position back to the server
         self.s_send("i", str(position))
@@ -560,7 +560,7 @@ def main():
         address = input("Please enter the address:")
         port_number = input("Please enter the port:")
 
-    for game in range(0, 20):
+    for game in range(0, 5):
         print("=============START===============")
         print("Start of Game number:", game)
         # Initialize the agent object
@@ -578,7 +578,7 @@ def main():
             # Close the agent
             agent.clean_up()
             agent.close()
-
+        time.sleep(1)
         print("End of Game number:", game)
         print("=============END================")
         print(" ")
