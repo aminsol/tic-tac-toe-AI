@@ -526,7 +526,7 @@ class AiPlayer(TTTClient):
                 move["explored"] = True
                 for pm in possible_moves:
                     total_score += pm["score"]
-                    if "explored" in pm and not pm["explored"]:
+                    if "explored" not in pm or not pm["explored"]:
                         move["explored"] = False
 
                 if move["new"]:
