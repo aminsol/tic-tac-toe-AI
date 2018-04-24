@@ -437,7 +437,7 @@ class History:
         elif not role == "X" and not role == "O":
             return False
 
-        statement = "DELETE FROM `shortterm` where role = '%s'" % role
+        statement = "DELETE FROM `shortterm` where role like '%s'" % role
         try:
             query.execute(statement)
             self.conn.commit()

@@ -484,15 +484,21 @@ class AiPlayer(TTTClient):
         if not new_moves:
             best_score = -1
             move_pool = []
+            equal_moves = []
             for move in used_moves:
+
+                if best_score == move["score"]:
+                    equal_moves.append(move)
                 if move["score"] > best_score:
                     final_move = move
                     best_score = move["score"]
+                    equal_moves = [move]
                 if not move["explored"]:
                     move_pool.append(move)
 
+            move_pool += equal_moves
             if move_pool:
-                final_move = self.weighted_choice(move_pool)
+                final_move = move_pool[random.randint(0, len(move_pool) - 1)]
 
         else:
             move_pool = new_moves
@@ -504,8 +510,8 @@ class AiPlayer(TTTClient):
         return final_move
 
     # using min max algorithm to score each move
-    def analyze_game(self):
-        all_moves = self.shortMemory.read_all(self.agent_role())
+    def analyze_game(self, role):
+        all_moves = self.shortMemory.read_all(role)
         i = 0
         for move in all_moves:
             # last moves always have static score based on game result
@@ -536,30 +542,39 @@ class AiPlayer(TTTClient):
             else:
                 best_score = []
                 worse_score = 101
+                gboards_prop = []
                 wbn = -1  # wbn stands for worse board number (index number of worse situation)
                 gboards = self.generate_boards(move)
                 bn = -1
                 for board in gboards:
                     bn += 1
                     used_moves = self.longMemory.read_select(board)
-                    gboards[bn]["num_used_move"] = len(used_moves)
-                    gboards[bn]["explored"] = True
+                    if move["new"]:
+                        exp_default = False
+                    else:
+                        exp_default = True
+
+                    gboards_prop.append({
+                        "explored": exp_default,
+                        "num_used_move": len(used_moves)
+                    })
+
                     best_score.append(-1)
                     for um in used_moves:
                         if best_score[bn] < um["score"]:
                             best_score[bn] = um["score"]
                         if not um["explored"]:
-                            gboards[bn]["explored"] = False
+                            gboards_prop[bn]["explored"] = False
 
-                for j in range(0, bn):
-                    if worse_score > best_score[j]:
+                for j in range(0, bn + 1):
+                    if best_score[j] >= 0 and worse_score > best_score[j]:
                         worse_score = best_score[j]
                         wbn = j
-                    elif worse_score == best_score:
-                        if gboards[j]["num_used_move"] > gboards[wbn]["num_used_moves"]:
+                    elif worse_score == best_score[j]:
+                        if gboards_prop[j]["num_used_move"] > gboards_prop[wbn]["num_used_move"]:
                             wbn = j
-                move["explored"] = gboards[wbn]["explored"]
-                move["score"] = worse_score / gboards[wbn]["num_used_move"]
+                move["explored"] = gboards_prop[wbn]["explored"]
+                move["score"] = best_score[wbn]
                 if move["new"]:
                     self.longMemory.save(move)
                 else:
@@ -568,7 +583,7 @@ class AiPlayer(TTTClient):
             i += 1
 
     def generate_boards(self, move):
-        original = list(move["before"])
+        original = list(move["board_before"])
         original[move["position"]] = move["role"]
         if move["role"] == "X":
             opp_role = "O"
@@ -598,9 +613,7 @@ class AiPlayer(TTTClient):
             role = self.agent_role()
             moves = self.shortMemory.read_all(role)
             game.save(moves, game_result, role)
-            game.erase_memory(role)
-        else:
-            game.erase_memory()
+        game.erase_memory()
 
 
 # Define the main program
@@ -629,7 +642,8 @@ def main():
             agent.clean_up()
             # Start the game
             agent.start_game()
-            agent.analyze_game()
+            agent.analyze_game(agent.agent_role())
+            agent.analyze_game(agent.opponent_role())
         except:
             print(("Game finished unexpectedly!"))
             failed_game += 1
