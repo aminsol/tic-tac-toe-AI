@@ -6,7 +6,7 @@ class ShortMemory:
 
     def __init__(self):
         try:
-            self.conn = MySQLdb.connect(host="127.0.0.1", user="root", passwd="", db="tictactoe")
+            self.conn = MySQLdb.connect(host="127.0.0.1", user="root", passwd="", db="tictactoe_v2")
         except:
             print("Please make sure you are running Mysql server(XAMPP)!")
             exit()
@@ -188,7 +188,7 @@ class ShortMemory:
 class LongMemory:
 
     def __init__(self):
-        self.conn = MySQLdb.connect(host="127.0.0.1", user="root", passwd="", db="tictactoe")
+        self.conn = MySQLdb.connect(host="127.0.0.1", user="root", passwd="", db="tictactoe_v2")
 
     def save(self, record):
         query = self.conn.cursor()
@@ -385,7 +385,7 @@ class LongMemory:
 
 class History:
     def __init__(self):
-        self.conn = MySQLdb.connect(host="127.0.0.1", user="root", passwd="", db="tictactoe")
+        self.conn = MySQLdb.connect(host="127.0.0.1", user="root", passwd="", db="tictactoe_v2")
 
     def save(self, moves, result, role):
         query = self.conn.cursor()
