@@ -321,7 +321,7 @@ class LongMemory:
             print("Long memory Unknown Error!")
             return False
 
-    def is_next_move_explored(self, move):
+    def is_move_explored(self, move):
         query = self.conn.cursor()
         board = move["board_before"].replace(' ', '-')
         board = list(board)
@@ -358,17 +358,27 @@ class LongMemory:
             try:
                 query.execute(statement)
                 totalscore = 0
+                worsescore = 101
+                '''if lowest average of all possible moves in all situation was ZERO'''
                 for (score, explored) in query:
-                    if not explored:
-                        return False
+                    if explored:
+                        if score == 0:
+                            move["explore"] = True
+                            move["score"] = 0
+                            return move
+                        elif worsescore > score:
+                            worsescore = score
                     else:
-                        totalscore += score
+                        break
                 else:
-                    number_poss = (len(result) * (len(result) -1))
+                    number_poss = (len(result) * (len(result) - 1))
                     if query.rowcount == number_poss:
-                        return totalscore / number_poss
-                    else:
-                        return False
+                        move["explore"] = True
+                        move["score"] = worsescore
+                        return move
+
+                move["explore"] = False
+                return move
 
             except self.conn.Error as e:
                 print("Error code:", e.args[0])  # error number
@@ -437,7 +447,7 @@ class History:
         elif not role == "X" and not role == "O":
             return False
 
-        statement = "DELETE FROM `shortterm` where role = '%s'" % role
+        statement = "DELETE FROM `shortterm` where role like '%s'" % role
         try:
             query.execute(statement)
             self.conn.commit()

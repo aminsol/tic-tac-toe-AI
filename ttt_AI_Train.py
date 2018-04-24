@@ -430,7 +430,6 @@ class AiPlayer(TTTClient):
                 break
         return result
 
-
     def positions_score(self, board=""):
         result = []
         if not board:
@@ -497,9 +496,6 @@ class AiPlayer(TTTClient):
 
         else:
             move_pool = new_moves
-            for move in used_moves:
-                if move["score"] == 100:
-                    move_pool.append(move)
             final_move = self.weighted_choice(move_pool)
 
         return final_move
@@ -538,23 +534,22 @@ class AiPlayer(TTTClient):
                 else:
                     possible_moves = self.positions_score(move["board_after"])
                     total_score = 0
+                    number_moves = 0
                     for pm in possible_moves:
-                        total_score += pm["score"]
+                        if not pm["new"]:
+                            total_score += pm["score"]
+                            number_moves += 1
 
                     if move["new"]:
                         move["explored"] = False
-                        move["score"] = total_score / len(possible_moves)
+                        move["score"] = total_score / number_moves
                         self.longMemory.save(move)
                     else:
-                        if "explored" not in move or not move["explored"]:
-                            finalscore = self.longMemory.is_next_move_explored(move)
-                            if finalscore:
-                                move["explored"] = True
-                                move["score"] = finalscore
-                            else:
-                                move["explored"] = False
-                                score = total_score / len(possible_moves)
-                                move["score"] = (move["score"] + score) / 2
+                        move = self.longMemory.is_move_explored(move)
+                        if not move["explored"]:
+                            move["explored"] = False
+                            score = total_score / number_moves
+                            move["score"] = (move["score"] + score) / 2
                         self.longMemory.update(move)
                 i += 1
 
@@ -614,6 +609,7 @@ def main():
             # time.sleep(5)
         print("End of Game number:", game)
         print("=============END================")
+        # time.sleep(3)
         print(" ")
 
     print("Connection Quality:", (total_game - failed_game) / total_game * 100, "%")
