@@ -196,7 +196,6 @@ class LongMemory:
         record["score"] = float(record["score"])
         record["explored"] = int(record["explored"])
         record["board_before"] = record["board_before"].replace(' ', '-')
-        record["board_after"] = record["board_after"].replace(' ', '-')
         statement = "INSERT INTO `longterm` (`board_before`, `position`, `score`, `role`, `explored`) " \
                     "VALUES ('%s', %d, %f, '%s', %d)" % (
                         record["board_before"],

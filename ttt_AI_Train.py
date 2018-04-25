@@ -254,22 +254,27 @@ class AiPlayer(TTTClient):
         make a move. This function might be overridden by the GUI program."""
         print("Waiting for the other player to make a move...")
 
-    def __opponent_move_made__(self, move):
+    def __opponent_move_made__(self, position):
         """(Private) Shows the user the move that the other player has taken.
         This function might be overridden by the GUI program."""
-        print("Your opponent took up number " + str(move));
+        print("Your opponent took up number " + str(position))
 
-        # Saves the oppenent's last move before overwriting
+        # Saves the opponent's last move before overwriting
         self.opp_last_position = self.opp_position
 
         # Updates to the current move
-        self.opp_position = move - 1
+        self.opp_position = position - 1
 
-        if self.agent_move:
-            board = list(self.agent_move["board_after"])
-            board[self.opp_position] = self.opponent_role()
-            self.agent_move["board_after"] = "".join(board)
-            self.shortMemory.update(self.agent_move)
+        board = list(self.board_content)
+        board[self.opp_position] = ' '
+        opponents_move = self.positions_score("".join(board))
+        for move in opponents_move:
+            if move["position"] == self.opp_position:
+                board_after = list(move["board_before"])
+                board_after[self.opp_position] = self.opponent_role()
+                move["board_after"] = "".join(board_after)
+                self.shortMemory.save(move)
+                break
 
     def __draw_winning_path__(self, winning_path):
         """(Private) Shows to the user the path that has caused the game to
@@ -435,6 +440,11 @@ class AiPlayer(TTTClient):
         if not board:
             board = self.board_content
 
+        if board.count('X') <= board.count('O'):
+            role = 'X'
+        else:
+            role = 'O'
+
         old_moves = self.longMemory.read_select(board)
         available_pos = self.all_available_pos(board)
         for position in available_pos:
@@ -446,7 +456,7 @@ class AiPlayer(TTTClient):
                     "board_before": board,
                     "position": position,
                     "score": 50,
-                    "role": self.agent_role(),
+                    "role": role,
                     "new": True,
                     "explored": False
                 })
@@ -489,7 +499,7 @@ class AiPlayer(TTTClient):
 
                 if best_score == move["score"]:
                     equal_moves.append(move)
-                if move["score"] > best_score:
+                elif move["score"] > best_score:
                     final_move = move
                     best_score = move["score"]
                     equal_moves = [move]
@@ -518,20 +528,35 @@ class AiPlayer(TTTClient):
             if move == all_moves[0]:
                 move["explored"] = True
                 if self.is_won():
-                    move["score"] = 100
-                    alternative_moves = self.positions_score(move["board_before"])
-                    for alm in alternative_moves:
-                        if alm["position"] != move["position"]:
-                            alm["score"] = 50
-                            alm["explored"] = True
-                            if alm["new"]:
-                                self.longMemory.save(alm)
-                            else:
-                                self.longMemory.update(alm)
+                    if role == self.opponent_role():
+                        move["score"] = 0
+                    else:
+                        move["score"] = 100
+                        alternative_moves = self.positions_score(move["board_before"])
+                        for alm in alternative_moves:
+                            if alm["position"] != move["position"]:
+                                alm["score"] = 50
+                                alm["explored"] = True
+                                if alm["new"]:
+                                    self.longMemory.save(alm)
+                                else:
+                                    self.longMemory.update(alm)
                 elif self.is_draw():
                     move["score"] = 50
                 elif self.is_lost():
-                    move["score"] = 0
+                    if role == self.agent_role():
+                        move["score"] = 0
+                    else:
+                        move["score"] = 100
+                        alternative_moves = self.positions_score(move["board_before"])
+                        for alm in alternative_moves:
+                            if alm["position"] != move["position"]:
+                                alm["score"] = 50
+                                alm["explored"] = True
+                                if alm["new"]:
+                                    self.longMemory.save(alm)
+                                else:
+                                    self.longMemory.update(alm)
                 else:
                     break
                 if move["new"]:
@@ -549,13 +574,9 @@ class AiPlayer(TTTClient):
                 for board in gboards:
                     bn += 1
                     used_moves = self.longMemory.read_select(board)
-                    if move["new"]:
-                        exp_default = False
-                    else:
-                        exp_default = True
 
                     gboards_prop.append({
-                        "explored": exp_default,
+                        "explored": True,
                         "num_used_move": len(used_moves)
                     })
 
@@ -565,6 +586,11 @@ class AiPlayer(TTTClient):
                             best_score[bn] = um["score"]
                         if not um["explored"]:
                             gboards_prop[bn]["explored"] = False
+                    alternative_moves = self.positions_score(board)
+                    for alm in alternative_moves:
+                        if not alm["explored"]:
+                            gboards_prop[bn]["explored"] = False
+                            break
 
                 for j in range(0, bn + 1):
                     if best_score[j] >= 0 and worse_score > best_score[j]:
