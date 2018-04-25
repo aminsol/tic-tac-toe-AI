@@ -1,0 +1,7 @@
+Select sum(explored = 1) as explored, sum(id > 0) as total, sum(explored = 1)/ sum(id > 0) as full_train from longterm
+
+
+SELECT *  FROM `longterm` WHERE `score` != 0 AND `score` != 100 AND `score` != 50 AND `explored` = 1 ORDER BY `board_before` ASC
+
+select sum(role = 'X') as X, sum(role = 'O') as O, sum(role = 'X')/sum(role = 'O') as 'XO Ratio',
+ SUM(result = 'draw') as Draw, sum(result = 'win') as 'Win', SUM(result = 'lost') as 'Lost', sum(result = 'win') / SUM(result = 'lost') * 100 as Ratio from games_history where id > 1000
