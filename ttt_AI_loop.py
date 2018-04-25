@@ -354,7 +354,7 @@ class AiPlayer(TTTClient):
         # Loop until the user enters a valid value
 
         # wait 1 sec so other player can catch up
-        # time.sleep(0.8)
+        time.sleep(0.8)
 
         # Send the position back to the server
         self.s_send("i", str(position))
@@ -676,7 +676,7 @@ def main():
             # Close the agent
             agent.clean_up()
             agent.close()
-            # time.sleep(5)
+            time.sleep(3)
         print("End of Game number:", game)
         print("=============END================")
         print(" ")
