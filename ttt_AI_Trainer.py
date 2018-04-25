@@ -268,13 +268,6 @@ class AiPlayer(TTTClient):
         board = list(self.board_content)
         board[self.opp_position] = ' '
         opponents_move = self.positions_score("".join(board))
-        for move in opponents_move:
-            if move["position"] == self.opp_position:
-                board_after = list(move["board_before"])
-                board_after[self.opp_position] = self.opponent_role()
-                move["board_after"] = "".join(board_after)
-                self.shortMemory.save(move)
-                break
 
     def __draw_winning_path__(self, winning_path):
         """(Private) Shows to the user the path that has caused the game to
@@ -343,8 +336,6 @@ class AiPlayer(TTTClient):
 
                     # Update the current move
                     self.agent_move = move_obj
-
-                    self.agent_move["shortterm_id"] = self.shortMemory.save(move_obj)
 
                     # If the user input is valid, break the loop
                     break
@@ -518,95 +509,6 @@ class AiPlayer(TTTClient):
             final_move = self.weighted_choice(move_pool)
 
         return final_move
-
-    # using min max algorithm to score each move
-    def analyze_game(self, role):
-        all_moves = self.shortMemory.read_all(role)
-        i = 0
-        for move in all_moves:
-            # last moves always have static score based on game result
-            if move == all_moves[0]:
-                move["explored"] = True
-                if self.is_won():
-                    if role == self.opponent_role():
-                        move["score"] = 0
-                    else:
-                        move["score"] = 100
-                        alternative_moves = self.positions_score(move["board_before"])
-                        for alm in alternative_moves:
-                            if alm["position"] != move["position"]:
-                                alm["score"] = 50
-                                alm["explored"] = True
-                                if alm["new"]:
-                                    self.longMemory.save(alm)
-                                else:
-                                    self.longMemory.update(alm)
-                elif self.is_draw():
-                    move["score"] = 50
-                elif self.is_lost():
-                    if role == self.agent_role():
-                        move["score"] = 0
-                    else:
-                        move["score"] = 100
-                        alternative_moves = self.positions_score(move["board_before"])
-                        for alm in alternative_moves:
-                            if alm["position"] != move["position"]:
-                                alm["score"] = 50
-                                alm["explored"] = True
-                                if alm["new"]:
-                                    self.longMemory.save(alm)
-                                else:
-                                    self.longMemory.update(alm)
-                else:
-                    break
-                if move["new"]:
-                    self.longMemory.save(move)
-                else:
-                    self.longMemory.update(move)
-
-            else:
-                best_score = []
-                worse_score = 101
-                gboards_prop = []
-                wbn = -1  # wbn stands for worse board number (index number of worse situation)
-                gboards = self.generate_boards(move)
-                bn = -1
-                for board in gboards:
-                    bn += 1
-                    used_moves = self.longMemory.read_select(board)
-
-                    gboards_prop.append({
-                        "explored": True,
-                        "num_used_move": len(used_moves)
-                    })
-
-                    best_score.append(-1)
-                    for um in used_moves:
-                        if best_score[bn] < um["score"]:
-                            best_score[bn] = um["score"]
-                        if not um["explored"]:
-                            gboards_prop[bn]["explored"] = False
-                    alternative_moves = self.positions_score(board)
-                    for alm in alternative_moves:
-                        if not alm["explored"]:
-                            gboards_prop[bn]["explored"] = False
-                            break
-
-                for j in range(0, bn + 1):
-                    if best_score[j] >= 0 and worse_score > best_score[j]:
-                        worse_score = best_score[j]
-                        wbn = j
-                    elif worse_score == best_score[j]:
-                        if gboards_prop[j]["num_used_move"] > gboards_prop[wbn]["num_used_move"]:
-                            wbn = j
-                move["explored"] = gboards_prop[wbn]["explored"]
-                move["score"] = best_score[wbn]
-                if move["new"]:
-                    self.longMemory.save(move)
-                else:
-                    self.longMemory.update(move)
-
-            i += 1
 
     def generate_boards(self, move):
         original = list(move["board_before"])

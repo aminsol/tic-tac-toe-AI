@@ -654,10 +654,9 @@ def main():
         address = input("Please enter the address:")
         port_number = input("Please enter the port:")
 
-    failed_game = 0
-    total_game = 0
-    for game in range(0, 10000):
-        total_game += 1
+    game = 0
+    while True:
+        game += 1
         print("=============START===============")
         print("Start of Game number:", game)
         # Initialize the agent object
@@ -672,7 +671,6 @@ def main():
             agent.analyze_game(agent.opponent_role())
         except:
             print(("Game finished unexpectedly!"))
-            failed_game += 1
         finally:
             # Close the agent
             agent.clean_up()
@@ -681,8 +679,6 @@ def main():
         print("End of Game number:", game)
         print("=============END================")
         print(" ")
-
-    print("Connection Quality:", (total_game - failed_game) / total_game * 100, "%")
 
 
 if __name__ == "__main__":
