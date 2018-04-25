@@ -503,8 +503,9 @@ class AiPlayer(TTTClient):
                     final_move = move
                     best_score = move["score"]
                     equal_moves = [move]
-                if not move["explored"]:
-                    move_pool.append(move)
+                # Comment out only for training purposes
+                # if not move["explored"]:
+                #     move_pool.append(move)
 
             move_pool += equal_moves
             if move_pool:
