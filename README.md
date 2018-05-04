@@ -15,7 +15,7 @@ The provided database is almost fully trained. However, if you want to see how t
 
 4- Give user `tictactoe` all the permissions for `tictactoe`.
 
-5- import `tictactoe.sql` to `tictactoe` database.
+5- Import `tictactoe.sql` to `tictactoe` database.
 
 ## Run
 
