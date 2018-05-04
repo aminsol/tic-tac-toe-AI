@@ -6,9 +6,9 @@ class ShortMemory:
 
     def __init__(self):
         try:
-            self.conn = MySQLdb.connect(host="127.0.0.1", user="root", passwd="", db="tictactoe_v2")
+            self.conn = MySQLdb.connect(host="127.0.0.1", user="tictactoe", passwd="tic", db="tictactoe")
         except:
-            print("Please make sure you are running Mysql server(XAMPP)!")
+            print("Please make sure you are running mysql server(XAMPP)!")
             exit()
 
     def save(self, move_obj):

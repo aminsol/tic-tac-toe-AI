@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 25, 2018 at 09:09 AM
+-- Generation Time: May 04, 2018 at 05:29 AM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `tictactoe_v2`
+-- Database: `tictactoe`
 --
 
 -- --------------------------------------------------------
@@ -145,7 +145,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (88, '---X-----', 8, 0, 'O', 1),
 (89, '-X--OOX--', 2, 0, 'X', 1),
 (90, '-X--O----', 6, 50, 'X', 1),
-(91, '---------', 1, 50, 'X', 0),
+(91, '---------', 1, 50, 'X', 1),
 (92, '-XX-OOX--', 0, 50, 'O', 1),
 (93, '-XX-OOX--', 7, 50, 'O', 1),
 (94, '-XX-OOX--', 8, 50, 'O', 1),
@@ -250,7 +250,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (193, '---XO-XXO', 2, 50, 'O', 1),
 (194, '---XO-XXO', 5, 50, 'O', 1),
 (195, '---XO-XXO', 0, 100, 'O', 1),
-(196, '---X---XO', 4, 100, 'O', 0),
+(196, '---X---XO', 4, 50, 'O', 1),
 (197, 'OO-X--OXX', 4, 0, 'X', 1),
 (198, '-O-X--OX-', 8, 0, 'X', 1),
 (199, '-O-X-----', 7, 0, 'X', 0),
@@ -504,7 +504,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (447, '-------X-', 0, 0, 'O', 1),
 (448, 'X-OOX-X-O', 1, 0, 'X', 1),
 (449, 'X-OO--X--', 4, 50, 'X', 1),
-(450, '--O---X--', 0, 100, 'X', 0),
+(450, '--O---X--', 0, 100, 'X', 1),
 (451, 'XXOOX-X-O', 7, 50, 'O', 1),
 (452, 'XXOOX-X-O', 5, 100, 'O', 1),
 (453, 'X-OOX-X--', 8, 50, 'O', 1),
@@ -651,7 +651,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (594, '--X-XO-OX', 0, 0, 'O', 1),
 (595, '--X----OX', 5, 0, 'O', 1),
 (596, '--XOXX-OO', 0, 50, 'X', 1),
-(597, '---OXX-O-', 2, 100, 'X', 1),
+(597, '---OXX-O-', 2, 0, 'X', 0),
 (598, '-----X-O-', 4, 100, 'X', 1),
 (599, 'X-XOXX-OO', 1, 50, 'O', 1),
 (600, 'X-XOXX-OO', 6, 100, 'O', 1),
@@ -1160,7 +1160,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (1103, '-X----O-X', 3, 0, 'O', 0),
 (1104, 'O-O-X-XOX', 1, 50, 'X', 1),
 (1105, 'O---X--OX', 6, 50, 'X', 1),
-(1106, '-------OX', 4, 100, 'X', 0),
+(1106, '-------OX', 4, 100, 'X', 1),
 (1107, 'OXO-X-XOX', 3, 50, 'O', 1),
 (1108, 'O---X-XOX', 2, 50, 'O', 0),
 (1109, '----X--OX', 0, 0, 'O', 1),
@@ -1555,7 +1555,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (1498, 'OO-X-XOXX', 4, 50, 'O', 1),
 (1499, 'OO-X-XOXX', 2, 100, 'O', 1),
 (1500, 'O--O-X-X-', 4, 0, 'X', 1),
-(1501, '---O-X---', 7, 50, 'X', 0),
+(1501, '---O-X---', 7, 50, 'X', 1),
 (1502, 'O--OXX-X-', 1, 50, 'O', 1),
 (1503, 'O--OXX-X-', 2, 50, 'O', 1),
 (1504, 'O--OXX-X-', 8, 50, 'O', 1),
@@ -2381,7 +2381,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (2323, '-XX--OXOO', 4, 50, 'X', 1),
 (2324, '-XX--OXOO', 0, 100, 'X', 1),
 (2325, '-X---OXO-', 2, 100, 'X', 1),
-(2326, '------XO-', 1, 50, 'X', 0),
+(2326, '------XO-', 1, 50, 'X', 1),
 (2327, '-XX--OXO-', 8, 0, 'O', 1),
 (2328, '-X----XO-', 5, 0, 'O', 1),
 (2329, 'X--XO-O--', 1, 0, 'X', 1),
@@ -2403,7 +2403,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (2345, 'X-OO--XX-', 8, 50, 'O', 1),
 (2346, 'O-OOXX--X', 7, 0, 'X', 1),
 (2347, '--OOXX---', 8, 0, 'X', 1),
-(2348, '--O--X---', 4, 50, 'X', 0),
+(2348, '--O--X---', 4, 50, 'X', 1),
 (2349, 'O-OOXX-XX', 1, 50, 'O', 1),
 (2350, 'O-OOXX-XX', 6, 100, 'O', 1),
 (2351, '---O--OXX', 4, 0, 'X', 1),
@@ -2562,7 +2562,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (2504, 'OXXXX-OO-', 8, 100, 'O', 1),
 (2505, 'OXXX---O-', 6, 50, 'O', 1),
 (2506, '-OOOXX-X-', 6, 0, 'X', 1),
-(2507, '--OOXX---', 7, 0, 'X', 0),
+(2507, '--OOXX---', 7, 50, 'X', 1),
 (2508, '-OOOXXXX-', 8, 50, 'O', 1),
 (2509, '-OOOXXXX-', 0, 100, 'O', 1),
 (2510, '--OOXX-X-', 1, 50, 'O', 1),
@@ -2819,7 +2819,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (2761, 'O-O-XXOXX', 1, 100, 'O', 1),
 (2762, 'O-O-XXOXX', 3, 50, 'O', 1),
 (2763, '--O--XOXX', 0, 50, 'O', 1),
-(2764, '--O--X-X-', 6, 100, 'O', 0),
+(2764, '--O--X-X-', 6, 100, 'O', 1),
 (2765, '--OOXXX-O', 0, 50, 'X', 1),
 (2766, '---OXX--O', 6, 50, 'X', 1),
 (2767, '----X---O', 5, 50, 'X', 1),
@@ -4019,7 +4019,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (3960, 'OX-O-OX-X', 4, 50, 'X', 1),
 (3961, 'OX-O-OX-X', 7, 100, 'X', 1),
 (3962, 'OX-O--X--', 8, 100, 'X', 1),
-(3963, 'OX-------', 6, 50, 'X', 0),
+(3963, 'OX-------', 6, 50, 'X', 1),
 (3964, 'OX-O--X-X', 5, 0, 'O', 1),
 (3965, 'OX----X--', 3, 0, 'O', 1),
 (3966, 'XOOXXOOX-', 8, 100, 'X', 1),
@@ -4680,7 +4680,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (4620, 'XOOXX--XO', 5, 100, 'O', 1),
 (4621, 'XO-XX---O', 2, 0, 'O', 1),
 (4622, 'OXO--OXX-', 3, 50, 'X', 1),
-(4623, 'OXO---X--', 7, 0, 'X', 0),
+(4623, 'OXO---X--', 7, 100, 'X', 1),
 (4624, 'OXOX-OXX-', 4, 50, 'O', 1),
 (4625, 'OXOX-OXX-', 8, 100, 'O', 1),
 (4626, 'OXO---XX-', 5, 0, 'O', 1),
@@ -5587,7 +5587,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (5527, '--XXOXOXO', 0, 100, 'O', 1),
 (5528, 'XXOOOX-XO', 6, 50, 'X', 1),
 (5529, 'XXOO-X--O', 7, 50, 'X', 1),
-(5530, '-XO--X--O', 0, 0, 'X', 0),
+(5530, '-XO--X--O', 0, 0, 'X', 1),
 (5531, 'XXOO-X-XO', 4, 50, 'O', 1),
 (5532, '---XOX--O', 2, 0, 'X', 1),
 (5533, 'XO-O-X-XO', 6, 50, 'X', 1),
@@ -6445,7 +6445,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (6384, '-OXX-O--X', 0, 0, 'O', 0),
 (6385, 'OXOXO-X--', 7, 0, 'X', 1),
 (6386, '-XO-O-X--', 3, 50, 'X', 1),
-(6387, '-XO------', 6, 50, 'X', 0),
+(6387, '-XO------', 6, 50, 'X', 1),
 (6388, 'OXOXO-XX-', 5, 50, 'O', 1),
 (6389, 'OXOXO-XX-', 8, 100, 'O', 1),
 (6390, '-XO--X-OX', 0, 50, 'O', 1),
@@ -7440,7 +7440,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (7379, '-OXX---OX', 6, 50, 'O', 1),
 (7380, '-OXX---OX', 4, 100, 'O', 1),
 (7381, '---X---OX', 1, 0, 'O', 0),
-(7382, '-OOO-X-XX', 0, 50, 'X', 1),
+(7382, '-OOO-X-XX', 0, 100, 'X', 1),
 (7383, '-O-O---XX', 5, 50, 'X', 1),
 (7384, '-O-O-X-XX', 2, 0, 'O', 1),
 (7385, '--XO-XOXO', 1, 0, 'X', 1),
@@ -7970,7 +7970,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (7908, '--X--OOX-', 8, 0, 'X', 1),
 (7909, 'O--X-O-X-', 1, 50, 'X', 1),
 (7910, '---XOXOXO', 2, 0, 'X', 1),
-(7911, '--OO-X-X-', 4, 0, 'X', 0),
+(7911, '--OO-X-X-', 4, 50, 'X', 1),
 (7912, '-OXX-O---', 4, 50, 'X', 1),
 (7913, '-O--OXX--', 3, 0, 'X', 1),
 (7914, '-O-XOXX--', 2, 50, 'O', 1),
@@ -8712,7 +8712,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (8650, 'XX-O-O-XO', 4, 100, 'X', 1),
 (8651, 'O-OX-O-XX', 1, 50, 'X', 1),
 (8652, 'O-OX-O-XX', 6, 100, 'X', 1),
-(8653, 'X-------O', 4, 0, 'X', 0),
+(8653, 'X-------O', 4, 50, 'X', 1),
 (8654, 'X---X---O', 6, 50, 'O', 1),
 (8655, 'XX-OO-X-O', 2, 100, 'X', 1),
 (8656, 'OXOXO--X-', 6, 0, 'X', 1),
@@ -10869,7 +10869,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (11051, '-X----OXO', 0, 0, 'X', 0),
 (11052, '-X-----XO', 6, 100, 'O', 0),
 (11053, '--OX-XOXO', 0, 50, 'X', 1),
-(11054, '--OX-X--O', 7, 0, 'X', 1),
+(11054, '--OX-X--O', 7, 50, 'X', 1),
 (11055, 'X-OX-XOXO', 1, 50, 'O', 1),
 (11056, '--OX-X-XO', 6, 0, 'O', 0),
 (11057, '--OX-X---', 8, 0, 'O', 0),
@@ -10896,7 +10896,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (11078, 'X------OX', 6, 0, 'O', 1),
 (11079, 'XXO-OOXOX', 3, 100, 'X', 1),
 (11080, 'XXO-O-XOX', 5, 0, 'O', 1),
-(11081, 'OO--X-XXO', 3, 50, 'X', 1),
+(11081, 'OO--X-XXO', 3, 0, 'X', 1),
 (11082, 'OO--X-XXO', 5, 50, 'X', 1),
 (11083, 'OO--X-XXO', 2, 100, 'X', 1),
 (11084, 'O---X-X-O', 7, 50, 'X', 1),
@@ -12044,10 +12044,10 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (12225, 'OX-----X-', 8, 0, 'O', 1),
 (12226, 'OXOX-XOXO', 4, 100, 'X', 1),
 (12227, '-XOX-XO-O', 7, 100, 'X', 1),
-(12228, '--OX-X--O', 1, 0, 'X', 1),
+(12228, '--OX-X--O', 1, 50, 'X', 1),
 (12229, '-XOX-XOXO', 0, 50, 'O', 1),
 (12230, '-XOX-X--O', 6, 0, 'O', 0),
-(12231, '---X-X--O', 2, 0, 'O', 0),
+(12231, '---X-X--O', 2, 0, 'O', 1),
 (12232, '-O-X-X-O-', 6, 50, 'X', 1),
 (12233, '-O-X-X---', 7, 0, 'O', 0),
 (12234, 'X--OOX-X-', 6, 0, 'O', 1),
@@ -12080,7 +12080,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (12261, 'O--XX-XO-', 5, 0, 'O', 1),
 (12262, 'O--X--X--', 7, 50, 'O', 0),
 (12263, '--O-OX-X-', 1, 0, 'X', 1),
-(12264, '--O--X-X-', 4, 50, 'O', 0),
+(12264, '--O--X-X-', 4, 50, 'O', 1),
 (12265, 'XO--OX---', 6, 0, 'X', 1),
 (12266, '-XXO--X-O', 7, 0, 'O', 1),
 (12267, '---OXOXXO', 0, 50, 'X', 1),
@@ -12614,9 +12614,9 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (12795, 'O-O-X-OXX', 3, 50, 'X', 1),
 (12796, '--O-X-OXX', 0, 0, 'O', 1),
 (12797, 'X-OO--XX-', 1, 0, 'O', 1),
-(12798, 'O-OX-X---', 1, 0, 'X', 0),
+(12798, 'O-OX-X---', 1, 50, 'X', 1),
 (12799, 'OXOX-X---', 8, 0, 'O', 1),
-(12800, '--OX-X---', 0, 100, 'O', 1),
+(12800, '--OX-X---', 0, 0, 'O', 1),
 (12801, 'OOX-X---X', 6, 0, 'O', 1),
 (12802, 'XO--XO---', 6, 50, 'X', 1),
 (12803, 'XO--XOX--', 7, 0, 'O', 1),
@@ -13047,7 +13047,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (13228, 'X-X-O--O-', 3, 50, 'X', 1),
 (13229, 'O-XX--XOO', 5, 50, 'X', 1),
 (13230, '--XX--XOO', 0, 0, 'O', 1),
-(13231, 'O-OX-X---', 6, 0, 'X', 1),
+(13231, 'O-OX-X---', 6, 50, 'X', 1),
 (13232, '-XXO-OX-O', 0, 50, 'X', 1),
 (13233, '-XXO-OX-O', 7, 50, 'X', 1),
 (13234, '-XXO-OX-O', 4, 100, 'X', 1),
@@ -13112,7 +13112,7 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (13293, '-XOOXOX--', 8, 50, 'X', 1),
 (13294, '-XOOXOX--', 7, 100, 'X', 1),
 (13295, '-X-OXOX--', 2, 0, 'O', 1),
-(13296, 'O-OX-X---', 8, 0, 'X', 1),
+(13296, 'O-OX-X---', 8, 50, 'X', 1),
 (13297, 'O--X-X---', 2, 100, 'O', 1),
 (13298, '-OOX--X--', 5, 50, 'X', 1),
 (13299, 'O-X-OO-XX', 1, 50, 'X', 1),
@@ -15107,7 +15107,91 @@ INSERT INTO `longterm` (`id`, `board_before`, `position`, `score`, `role`, `expl
 (15286, 'XXOO-OXX-', 4, 50, 'O', 1),
 (15287, 'XXOO-OXX-', 8, 100, 'O', 1),
 (15288, 'XXOO-OX--', 4, 0, 'X', 1),
-(15289, 'XXOOXOX--', 8, 100, 'O', 1);
+(15289, 'XXOOXOX--', 8, 100, 'O', 1),
+(15290, '--O-XXOX-', 3, 0, 'O', 1),
+(15291, '--OOXXOX-', 0, 100, 'X', 1),
+(15292, '--O--XOX-', 4, 0, 'X', 0),
+(15293, '-O--X-XXO', 0, 100, 'O', 1),
+(15294, '--OO-X-XX', 4, 0, 'O', 1),
+(15295, '--OOXX--X', 1, 0, 'O', 1),
+(15296, '--OO-X-XX', 1, 0, 'O', 1),
+(15297, 'O-OX-X---', 7, 50, 'X', 1),
+(15298, 'O-OX-X---', 4, 100, 'X', 1),
+(15299, '--OX-X--O', 0, 50, 'X', 1),
+(15300, '--OX-X--O', 6, 50, 'X', 1),
+(15301, '--OX-X--O', 4, 100, 'X', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `longterm_bad`
+--
+
+CREATE TABLE `longterm_bad` (
+  `id` int(11) NOT NULL,
+  `board_before` varchar(10) NOT NULL,
+  `position` int(11) NOT NULL,
+  `score` float NOT NULL,
+  `role` char(1) NOT NULL,
+  `explored` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `longterm_bad`
+--
+
+INSERT INTO `longterm_bad` (`id`, `board_before`, `position`, `score`, `role`, `explored`) VALUES
+(1, '--X-X-OOX', 0, 0, 'O', 1),
+(2, '--X-X--O-', 6, 0, 'O', 0),
+(3, '----X----', 7, 0, 'O', 0),
+(4, 'O-X-X-OOX', 1, 50, 'X', 1),
+(5, 'O-X-X-OOX', 3, 50, 'X', 1),
+(6, 'O-X-X-OOX', 5, 100, 'X', 1),
+(7, '--X-X-OO-', 8, 100, 'X', 1),
+(8, '----X--O-', 2, 100, 'X', 0),
+(9, '---------', 4, 100, 'X', 0),
+(10, '--X-OX-O-', 0, 0, 'X', 1),
+(11, '--X-O----', 5, 0, 'X', 0),
+(12, '---------', 2, 0, 'X', 0),
+(13, 'X-X-OX-O-', 3, 50, 'O', 1),
+(14, 'X-X-OX-O-', 6, 50, 'O', 1),
+(15, 'X-X-OX-O-', 8, 50, 'O', 1),
+(16, 'X-X-OX-O-', 1, 100, 'O', 1),
+(17, '--X-OX---', 7, 100, 'O', 1),
+(18, '--X------', 4, 100, 'O', 0),
+(19, '----XX--O', 6, 0, 'O', 1),
+(20, '----X----', 8, 0, 'O', 0),
+(21, '----XXO-O', 0, 50, 'X', 1),
+(22, '----XXO-O', 1, 50, 'X', 1),
+(23, '----XXO-O', 2, 50, 'X', 1),
+(24, '----XXO-O', 7, 50, 'X', 1),
+(25, '----XXO-O', 3, 100, 'X', 1),
+(26, '----X---O', 5, 100, 'X', 1),
+(27, '---OX--X-', 6, 0, 'O', 1),
+(28, '----X----', 3, 0, 'O', 0),
+(29, '---OX-OX-', 0, 50, 'X', 1),
+(30, '---OX-OX-', 2, 50, 'X', 1),
+(31, '---OX-OX-', 5, 50, 'X', 1),
+(32, '---OX-OX-', 8, 50, 'X', 1),
+(33, '---OX-OX-', 1, 100, 'X', 1),
+(34, '---OX----', 7, 100, 'X', 1),
+(35, 'O--XXOOXX', 1, 50, 'O', 1),
+(36, '----XOOXX', 0, 50, 'O', 0),
+(37, '-----O-XX', 6, 50, 'O', 0),
+(38, '-------X-', 5, 50, 'O', 0),
+(39, 'OO-XXOOXX', 2, 50, 'X', 1),
+(40, 'O---XOOXX', 3, 50, 'X', 1),
+(41, '-----OOXX', 4, 50, 'X', 0),
+(42, '-----O-X-', 8, 50, 'X', 0),
+(43, '---------', 7, 50, 'X', 0),
+(44, 'X---XO---', 1, 0, 'O', 1),
+(45, '----X----', 5, 0, 'O', 0),
+(46, 'XO--XO---', 2, 50, 'X', 1),
+(47, 'XO--XO---', 3, 50, 'X', 1),
+(48, 'XO--XO---', 6, 50, 'X', 1),
+(49, 'XO--XO---', 7, 50, 'X', 1),
+(50, 'XO--XO---', 8, 100, 'X', 1),
+(51, '----XO---', 0, 100, 'X', 1);
 
 -- --------------------------------------------------------
 
@@ -15163,6 +15247,13 @@ ALTER TABLE `longterm`
   ADD UNIQUE KEY `board_move` (`board_before`,`position`) USING BTREE;
 
 --
+-- Indexes for table `longterm_bad`
+--
+ALTER TABLE `longterm_bad`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `board_move` (`board_before`,`position`) USING BTREE;
+
+--
 -- Indexes for table `moves_history`
 --
 ALTER TABLE `moves_history`
@@ -15189,7 +15280,13 @@ ALTER TABLE `games_history`
 -- AUTO_INCREMENT for table `longterm`
 --
 ALTER TABLE `longterm`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15290;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15302;
+
+--
+-- AUTO_INCREMENT for table `longterm_bad`
+--
+ALTER TABLE `longterm_bad`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `moves_history`
@@ -15201,7 +15298,7 @@ ALTER TABLE `moves_history`
 -- AUTO_INCREMENT for table `shortterm`
 --
 ALTER TABLE `shortterm`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=288055;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
