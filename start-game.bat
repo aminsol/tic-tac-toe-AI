@@ -25,4 +25,6 @@ IF NOT "%PYTHON_VERSION:~0,8%" == "Python 3" (
 )
 
 :: Run the GUI python script
-start "" pythonw ttt_client_gui.py
+start "" python ttt_client_gui.py
+start "" python ttt_server.py 3413
+start "" python ttt_AI_loop.py 127.0.0.1 3413

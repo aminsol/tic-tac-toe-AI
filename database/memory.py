@@ -188,7 +188,7 @@ class ShortMemory:
 class LongMemory:
 
     def __init__(self):
-        self.conn = MySQLdb.connect(host="127.0.0.1", user="root", passwd="", db="tictactoe_v2")
+        self.conn = MySQLdb.connect(host="127.0.0.1", user="tictactoe", passwd="tic", db="tictactoe")
 
     def save(self, record):
         query = self.conn.cursor()
@@ -384,7 +384,7 @@ class LongMemory:
 
 class History:
     def __init__(self):
-        self.conn = MySQLdb.connect(host="127.0.0.1", user="root", passwd="", db="tictactoe_v2")
+        self.conn = MySQLdb.connect(host="127.0.0.1", user="tictactoe", passwd="tic", db="tictactoe")
 
     def save(self, moves, result, role):
         query = self.conn.cursor()
